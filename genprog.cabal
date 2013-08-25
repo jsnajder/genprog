@@ -1,11 +1,11 @@
 name:                genprog
 version:             0.1.0.1
 synopsis:            Genetic programming library
-homepage:            http://github.com/jsnajder/genprog
 license:             BSD3
 license-file:        LICENSE
 author:              Jan Snajder
 maintainer:          jan.snajder@fer.hr
+homepage:            http://github.com/jsnajder/genprog
 copyright:           (c) 2010 Jan Snajder
 category:            AI, Algorithms, Optimisation
 stability:           Experimental
@@ -27,7 +27,12 @@ library
     GenProg, GenProg.GenExpr, GenProg.GenExpr.Data
   build-depends: 
     base == 4.5.*, syb == 0.4.*, syz == 0.2.*, MonadRandom == 0.1.*
+  hs-source-dirs: src
   extensions:
     MultiParamTypeClasses, FunctionalDependencies, 
     NoMonomorphismRestriction, ScopedTypeVariables, FlexibleInstances, 
     Rank2Types, UndecidableInstances, DeriveDataTypeable
+
+source-repository head
+  type:     git
+  location: https://github.com/jsnajder/genprog
