@@ -1,0 +1,323 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>GenProg</title><link href="ocean.css" rel="stylesheet" type="text/css" title="Ocean" /><script src="haddock-util.js" type="text/javascript"></script><script type="text/javascript">//<![CDATA[
+window.onload = function () {pageLoad();setSynopsis("mini_GenProg.html");};
+//]]>
+</script></head><body><div id="package-header"><ul class="links" id="page-menu"><li><a href="index.html">Contents</a></li><li><a href="doc-index.html">Index</a></li></ul><p class="caption" class="empty">&nbsp;</p></div><div id="content"><div id="module-header"><table class="info"><tr><th>Portability</th><td>non-portable</td></tr><tr><th>Stability</th><td>experimental</td></tr><tr><th>Maintainer</th><td>Jan Snajder &lt;jan.snajder@fer.hr&gt;</td></tr><tr><th>Safe Haskell</th><td>Safe-Infered</td></tr></table><p class="caption">GenProg</p></div><div id="table-of-contents"><p class="caption">Contents</p><ul><li><a href="#g:1">Genetic programs
+</a></li><li><a href="#g:2">Expressions
+</a></li><li><a href="#g:3">Individuals
+</a></li><li><a href="#g:4">Population
+</a></li><li><a href="#g:5">Genetic operators
+</a></li><li><a href="#g:6">Evolution state
+</a></li><li><a href="#g:7">Control parameters
+</a></li><li><a href="#g:8">Evolution
+</a></li><li><a href="#g:9">Example
+</a></li></ul></div><div id="description"><p class="caption">Description</p><div class="doc"><p>The Genetic Programming Library.
+</p><p><em>Genetic programming</em> is an evolutionary optimization technique
+ inspired by biological evolution. It is similar to <em>genetic algorithms</em>
+ except that the individual solutions are programs (or, more generally, 
+ <em>expressions</em>) representing a solution to a given problem. A genetic 
+ program is represented as an <em>abstract syntax tree</em> and associated 
+ with a custom-defined <em>fitness</em> value indicating the quality of the 
+ solution. Starting from a randomly generated initial population of 
+ genetic programs, the genetic operators of <em>selection</em>, <em>crossover</em>, 
+ and (occasionally) <em>mutation</em> are used to evolve programs of 
+ increasingly better quality.
+</p><p>Standard reference is: John Koza. <em>Genetic programming:</em>
+ <em>On the Programming of Computers by Means of Natural Selection</em>.
+ MIT Press, 1992.
+</p><p>In GenProg, a genetic program is represented by a value of an
+ algebraic datatype. To use a datatype as a genetic program, it
+ suffices to define it as an instance of the <code><a href="GenProg.html#t:GenProg">GenProg</a></code> typeclass.
+ A custom datatype can be made an instance of the <code><a href="GenProg.html#t:GenProg">GenProg</a></code>
+ typeclass, provided it is an instance of the <code>Data</code> typeclass (see
+ <a href="GenProg-GenExpr-Data.html">GenProg.GenExpr.Data</a>).
+</p><p>An example of how to use this library is given below.
+</p></div></div><div id="synopsis"><p id="control.syn" class="caption expander" onclick="toggleSection('syn')">Synopsis</p><ul id="section.syn" class="hide" onclick="toggleSection('syn')"><li class="src short"><span class="keyword">class</span> (Eq e, GenExpr e, MonadRandom m) =&gt; <a href="#t:GenProg">GenProg</a> m e | e -&gt; m <span class="keyword">where</span><ul class="subs"><li><a href="#v:terminal">terminal</a> :: m e</li><li><a href="#v:nonterminal">nonterminal</a> :: m e</li></ul></li><li class="src short"><a href="#v:generateFullExpr">generateFullExpr</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; Int -&gt; m e</li><li class="src short"><a href="#v:generateGrownExpr">generateGrownExpr</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; Int -&gt; m e</li><li class="src short"><a href="#v:depth">depth</a> :: GenExpr e =&gt; e -&gt; Int</li><li class="src short"><a href="#v:nodes">nodes</a> :: GenExpr e =&gt; e -&gt; Int</li><li class="src short"><span class="keyword">data</span>  <a href="#t:Ind">Ind</a> e</li><li class="src short"><a href="#v:unInd">unInd</a> :: <a href="GenProg.html#t:Ind">Ind</a> e -&gt; e</li><li class="src short"><a href="#v:mkInd">mkInd</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; <a href="GenProg.html#t:Fitness">Fitness</a> e -&gt; e -&gt; <a href="GenProg.html#t:Ind">Ind</a> e</li><li class="src short"><a href="#v:aFitness">aFitness</a> :: <a href="GenProg.html#t:Ind">Ind</a> e -&gt; Double</li><li class="src short"><a href="#v:sFitness">sFitness</a> ::  <a href="GenProg.html#t:Ind">Ind</a> e -&gt; Double</li><li class="src short"><span class="keyword">data</span>  <a href="#t:Pop">Pop</a> e</li><li class="src short"><a href="#v:unPop">unPop</a> :: <a href="GenProg.html#t:Pop">Pop</a> e -&gt; [<a href="GenProg.html#t:Ind">Ind</a> e]</li><li class="src short"><a href="#v:mkPop">mkPop</a> ::  [<a href="GenProg.html#t:Ind">Ind</a> e] -&gt; <a href="GenProg.html#t:Pop">Pop</a> e</li><li class="src short"><a href="#v:generatePop">generatePop</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; <a href="GenProg.html#t:EvolParams">EvolParams</a> m e -&gt; m (<a href="GenProg.html#t:Pop">Pop</a> e)</li><li class="src short"><a href="#v:replenishPop">replenishPop</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; <a href="GenProg.html#t:EvolParams">EvolParams</a> m e -&gt; <a href="GenProg.html#t:Pop">Pop</a> e -&gt; m (<a href="GenProg.html#t:Pop">Pop</a> e)</li><li class="src short"><a href="#v:mergePop">mergePop</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; <a href="GenProg.html#t:EvolParams">EvolParams</a> m e -&gt; <a href="GenProg.html#t:Pop">Pop</a> e -&gt; <a href="GenProg.html#t:Pop">Pop</a> e -&gt; <a href="GenProg.html#t:Pop">Pop</a> e</li><li class="src short"><a href="#v:best">best</a> ::  <a href="GenProg.html#t:Pop">Pop</a> e -&gt; <a href="GenProg.html#t:Ind">Ind</a> e</li><li class="src short"><a href="#v:avgFitness">avgFitness</a> ::  <a href="GenProg.html#t:Pop">Pop</a> e -&gt; Double</li><li class="src short"><a href="#v:avgDepth">avgDepth</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; <a href="GenProg.html#t:Pop">Pop</a> e -&gt; Double</li><li class="src short"><a href="#v:avgNodes">avgNodes</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; <a href="GenProg.html#t:Pop">Pop</a> e -&gt; Double</li><li class="src short"><a href="#v:crossoverInd">crossoverInd</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; <a href="GenProg.html#t:EvolParams">EvolParams</a> m e -&gt; <a href="GenProg.html#t:Ind">Ind</a> e -&gt; <a href="GenProg.html#t:Ind">Ind</a> e -&gt; m (<a href="GenProg.html#t:Ind">Ind</a> e, <a href="GenProg.html#t:Ind">Ind</a> e)</li><li class="src short"><a href="#v:mutateInd">mutateInd</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; <a href="GenProg.html#t:EvolParams">EvolParams</a> m e -&gt; <a href="GenProg.html#t:Ind">Ind</a> e -&gt; m (<a href="GenProg.html#t:Ind">Ind</a> e)</li><li class="src short"><a href="#v:crossoverPop">crossoverPop</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; <a href="GenProg.html#t:EvolParams">EvolParams</a> m e -&gt; <a href="GenProg.html#t:Pop">Pop</a> e -&gt; m (<a href="GenProg.html#t:Ind">Ind</a> e, <a href="GenProg.html#t:Ind">Ind</a> e)</li><li class="src short"><a href="#v:mutatePop">mutatePop</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; <a href="GenProg.html#t:EvolParams">EvolParams</a> m e -&gt; <a href="GenProg.html#t:Pop">Pop</a> e -&gt; m (<a href="GenProg.html#t:Pop">Pop</a> e)</li><li class="src short"><span class="keyword">data</span>  <a href="#t:EvolState">EvolState</a> e = <a href="#v:EvolState">EvolState</a> {<ul class="subs"><li><a href="#v:pop">pop</a> :: <a href="GenProg.html#t:Pop">Pop</a> e</li><li><a href="#v:iter">iter</a> :: Int</li><li><a href="#v:cachedBest">cachedBest</a> :: <a href="GenProg.html#t:Ind">Ind</a> e</li></ul>}</li><li class="src short"><span class="keyword">type</span> <a href="#t:Fitness">Fitness</a> e = e -&gt; Double</li><li class="src short"><span class="keyword">type</span> <a href="#t:Mutate">Mutate</a> m e = e -&gt; m e</li><li class="src short"><a href="#v:defaultMutation">defaultMutation</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; <a href="GenProg.html#t:EvolParams">EvolParams</a> m e -&gt; <a href="GenProg.html#t:Mutate">Mutate</a> m e</li><li class="src short"><span class="keyword">type</span> <a href="#t:Terminate">Terminate</a> e = <a href="GenProg.html#t:EvolState">EvolState</a> e -&gt; Bool</li><li class="src short"><a href="#v:tSuccess">tSuccess</a> ::  (e -&gt; Bool) -&gt; <a href="GenProg.html#t:Terminate">Terminate</a> e</li><li class="src short"><a href="#v:tFitness">tFitness</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; Double -&gt; <a href="GenProg.html#t:Terminate">Terminate</a> e</li><li class="src short"><a href="#v:tGeneration">tGeneration</a> ::  Int -&gt; <a href="GenProg.html#t:Terminate">Terminate</a> e</li><li class="src short"><span class="keyword">data</span>  <a href="#t:EvolParams">EvolParams</a> m e = <a href="#v:EvolParams">EvolParams</a> {<ul class="subs"><li><a href="#v:popSize">popSize</a> :: Int</li><li><a href="#v:iDepth">iDepth</a> :: Int</li><li><a href="#v:cDepth">cDepth</a> :: Int</li><li><a href="#v:cProb">cProb</a> :: Double</li><li><a href="#v:ciProb">ciProb</a> :: Double</li><li><a href="#v:mProb">mProb</a> :: Double</li><li><a href="#v:miProb">miProb</a> :: Double</li><li><a href="#v:fitness">fitness</a> :: <a href="GenProg.html#t:Fitness">Fitness</a> e</li><li><a href="#v:mutate">mutate</a> :: <a href="GenProg.html#t:Mutate">Mutate</a> m e</li><li><a href="#v:elitists">elitists</a> :: Int</li><li><a href="#v:terminate">terminate</a> :: <a href="GenProg.html#t:Terminate">Terminate</a> e</li></ul>}</li><li class="src short"><a href="#v:defaultEvolParams">defaultEvolParams</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; <a href="GenProg.html#t:EvolParams">EvolParams</a> m e</li><li class="src short"><a href="#v:evolve">evolve</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; <a href="GenProg.html#t:EvolParams">EvolParams</a> m e -&gt; m (<a href="GenProg.html#t:EvolState">EvolState</a> e)</li><li class="src short"><a href="#v:evolveFrom">evolveFrom</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; <a href="GenProg.html#t:EvolParams">EvolParams</a> m e -&gt; <a href="GenProg.html#t:Pop">Pop</a> e -&gt; m (<a href="GenProg.html#t:EvolState">EvolState</a> e)</li><li class="src short"><a href="#v:evolveTrace">evolveTrace</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; <a href="GenProg.html#t:EvolParams">EvolParams</a> m e -&gt; m [<a href="GenProg.html#t:EvolState">EvolState</a> e]</li><li class="src short"><a href="#v:evolveTraceFrom">evolveTraceFrom</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; <a href="GenProg.html#t:EvolParams">EvolParams</a> m e -&gt; <a href="GenProg.html#t:Pop">Pop</a> e -&gt; m [<a href="GenProg.html#t:EvolState">EvolState</a> e]</li></ul></div><div id="interface"><h1 id="g:1">Genetic programs
+</h1><div class="top"><p class="src"><span class="keyword">class</span> (Eq e, GenExpr e, MonadRandom m) =&gt; <a name="t:GenProg" class="def">GenProg</a> m e | e -&gt; m <span class="keyword">where</span></p><div class="doc"><p>A typeclass defining a genetic program interface.  Datatypes <code>e</code>
+ that are to be used as genetic programs must be instances of the
+ <code>GenExpr</code> typeclass and must implement this interface. 
+</p></div><div class="subs methods"><p class="caption">Methods</p><p class="src"><a name="v:terminal" class="def">terminal</a> :: m e</p><div class="doc"><p>Generates a random terminal <code>T</code>.
+</p></div><p class="src"><a name="v:nonterminal" class="def">nonterminal</a> :: m e</p><div class="doc"><p>Generates a random nonterminal (functional) node <code>F(T,...,T)</code> whose
+ arguments are again terminals (this condition is not verified).
+</p></div></div></div><h1 id="g:2">Expressions
+</h1><div class="top"><p class="src"><a name="v:generateFullExpr" class="def">generateFullExpr</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; Int -&gt; m e</p><div class="doc"><p>Generates a random expression fully expanded to the specified depth.
+</p></div></div><div class="top"><p class="src"><a name="v:generateGrownExpr" class="def">generateGrownExpr</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; Int -&gt; m e</p><div class="doc"><p>Generates a random expression of limited depth. The maximum depth of
+ the resulting expression may be less than the specified depth
+ limit, and paths may be of different length.
+</p></div></div><div class="top"><p class="src"><a name="v:depth" class="def">depth</a> :: GenExpr e =&gt; e -&gt; Int</p></div><div class="top"><p class="src"><a name="v:nodes" class="def">nodes</a> :: GenExpr e =&gt; e -&gt; Int</p></div><h1 id="g:3">Individuals
+</h1><div class="top"><p class="src"><span class="keyword">data</span>  <a name="t:Ind" class="def">Ind</a> e </p><div class="doc"><p>A genetically programmed individual, representing a basic unit
+ of evolution. (Basically a wrapper around a genetically programmable
+ expression.)
+</p></div><div class="subs instances"><p id="control.i:Ind" class="caption collapser" onclick="toggleSection('i:Ind')">Instances</p><div id="section.i:Ind" class="show"><table><tr><td class="src">Eq e =&gt; Eq (<a href="GenProg.html#t:Ind">Ind</a> e)</td><td class="doc empty">&nbsp;</td></tr><tr><td class="src">Eq e =&gt; Ord (<a href="GenProg.html#t:Ind">Ind</a> e)</td><td class="doc empty">&nbsp;</td></tr><tr><td class="src">Show e =&gt; Show (<a href="GenProg.html#t:Ind">Ind</a> e)</td><td class="doc empty">&nbsp;</td></tr></table></div></div></div><div class="top"><p class="src"><a name="v:unInd" class="def">unInd</a> :: <a href="GenProg.html#t:Ind">Ind</a> e -&gt; e</p><div class="doc"><p>Returns the expression wrapped by an individual.
+</p></div></div><div class="top"><p class="src"><a name="v:mkInd" class="def">mkInd</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; <a href="GenProg.html#t:Fitness">Fitness</a> e -&gt; e -&gt; <a href="GenProg.html#t:Ind">Ind</a> e</p><div class="doc"><p>Wraps an expression into an individual.
+</p></div></div><div class="top"><p class="src"><a name="v:aFitness" class="def">aFitness</a> :: <a href="GenProg.html#t:Ind">Ind</a> e -&gt; Double</p><div class="doc"><p>Adjusted fitness of an individual. Adjusted fitness equals
+ <code>1/(1+s)</code>, where <code>s</code> is the standardized fitness as computed by
+ <code><a href="GenProg.html#v:fitness">fitness</a></code>. To reduce computational costs, this value is computed
+ only once and then cached.
+</p></div></div><div class="top"><p class="src"><a name="v:sFitness" class="def">sFitness</a> ::  <a href="GenProg.html#t:Ind">Ind</a> e -&gt; Double</p><div class="doc"><p>Standardized fitness of an individual as computed by <code><a href="GenProg.html#v:fitness">fitness</a></code>
+</p></div></div><h1 id="g:4">Population
+</h1><div class="top"><p class="src"><span class="keyword">data</span>  <a name="t:Pop" class="def">Pop</a> e </p><div class="doc"><p>A population of individuals. (Basically a wrapper around a list of
+ individuals.)
+</p></div><div class="subs instances"><p id="control.i:Pop" class="caption collapser" onclick="toggleSection('i:Pop')">Instances</p><div id="section.i:Pop" class="show"><table><tr><td class="src">Eq e =&gt; Eq (<a href="GenProg.html#t:Pop">Pop</a> e)</td><td class="doc empty">&nbsp;</td></tr><tr><td class="src">Show e =&gt; Show (<a href="GenProg.html#t:Pop">Pop</a> e)</td><td class="doc empty">&nbsp;</td></tr></table></div></div></div><div class="top"><p class="src"><a name="v:unPop" class="def">unPop</a> :: <a href="GenProg.html#t:Pop">Pop</a> e -&gt; [<a href="GenProg.html#t:Ind">Ind</a> e]</p><div class="doc"><p>Unwraps a population.
+</p></div></div><div class="top"><p class="src"><a name="v:mkPop" class="def">mkPop</a> ::  [<a href="GenProg.html#t:Ind">Ind</a> e] -&gt; <a href="GenProg.html#t:Pop">Pop</a> e</p><div class="doc"><p>Wraps a list of individuals into a population.
+</p></div></div><div class="top"><p class="src"><a name="v:generatePop" class="def">generatePop</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; <a href="GenProg.html#t:EvolParams">EvolParams</a> m e -&gt; m (<a href="GenProg.html#t:Pop">Pop</a> e)</p><div class="doc"><p>Generate population of given size and given depth limit using
+ <em>ramped half-and-half</em> method (Koza, 1992): for each depth value from 0 to
+ the initial depth limit <code><a href="GenProg.html#v:iDepth">iDepth</a></code>, 50% of individuals are generated using
+ <code><a href="GenProg.html#v:generateFullExpr">generateFullExpr</a></code> and 50% are generated using
+ <code><a href="GenProg.html#v:generateGrownExpr">generateGrownExpr</a></code>. Afterwards, duplicates are removed, thus the
+ size of the resulting population may actually be less than the
+ specified size.
+</p></div></div><div class="top"><p class="src"><a name="v:replenishPop" class="def">replenishPop</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; <a href="GenProg.html#t:EvolParams">EvolParams</a> m e -&gt; <a href="GenProg.html#t:Pop">Pop</a> e -&gt; m (<a href="GenProg.html#t:Pop">Pop</a> e)</p><div class="doc"><p>Replenishes a population up to <code><a href="GenProg.html#v:popSize">popSize</a></code> by randomly
+ generating new individuals.
+</p></div></div><div class="top"><p class="src"><a name="v:mergePop" class="def">mergePop</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; <a href="GenProg.html#t:EvolParams">EvolParams</a> m e -&gt; <a href="GenProg.html#t:Pop">Pop</a> e -&gt; <a href="GenProg.html#t:Pop">Pop</a> e -&gt; <a href="GenProg.html#t:Pop">Pop</a> e</p><div class="doc"><p>Merges two populations by taking <code><a href="GenProg.html#v:popSize">popSize</a></code> best-fitted individuals
+ from the union of the two populations.
+</p></div></div><div class="top"><p class="src"><a name="v:best" class="def">best</a> ::  <a href="GenProg.html#t:Pop">Pop</a> e -&gt; <a href="GenProg.html#t:Ind">Ind</a> e</p><div class="doc"><p>Population's best-fitted individual.
+</p></div></div><div class="top"><p class="src"><a name="v:avgFitness" class="def">avgFitness</a> ::  <a href="GenProg.html#t:Pop">Pop</a> e -&gt; Double</p><div class="doc"><p>Population's average standardized fitness.
+</p></div></div><div class="top"><p class="src"><a name="v:avgDepth" class="def">avgDepth</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; <a href="GenProg.html#t:Pop">Pop</a> e -&gt; Double</p><div class="doc"><p>Average depth of expressions in the population.
+</p></div></div><div class="top"><p class="src"><a name="v:avgNodes" class="def">avgNodes</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; <a href="GenProg.html#t:Pop">Pop</a> e -&gt; Double</p><div class="doc"><p>Average number of expression nodes in the population.
+</p></div></div><h1 id="g:5">Genetic operators
+</h1><div class="doc"><p>The following functions are not meant to be used directly.
+ They are exposed for debugging purposes.
+</p></div><div class="top"><p class="src"><a name="v:crossoverInd" class="def">crossoverInd</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; <a href="GenProg.html#t:EvolParams">EvolParams</a> m e -&gt; <a href="GenProg.html#t:Ind">Ind</a> e -&gt; <a href="GenProg.html#t:Ind">Ind</a> e -&gt; m (<a href="GenProg.html#t:Ind">Ind</a> e, <a href="GenProg.html#t:Ind">Ind</a> e)</p><div class="doc"><p>Crossover operation of two individuals, resulting in two
+ offsprings. Crossover is performed by choosing at random two nodes
+ in each expressions, and then by exchanging the subexpressions
+ rooted at these nodes between the two individuals. The probability
+ that an internal (functional) node is chosen as crossover point is
+ set by the <code><a href="GenProg.html#v:ciProb">ciProb</a></code> parameter in <code><a href="GenProg.html#t:EvolParams">EvolParams</a></code>, whereas the
+ probability that an external (terminal) node is chosen equals
+ <code>1-ciProb</code>. Among internal and external nodes, nodes are chosen
+ uniformly at random. If the depth of a created offspring exceeds
+ the depth limit <code><a href="GenProg.html#v:cDepth">cDepth</a></code> specified by evolution parameters
+ <code><a href="GenProg.html#t:EvolParams">EvolParams</a></code>, that offspring is discarded and a parent is
+ reproduced (i.e., copied as-is).
+</p></div></div><div class="top"><p class="src"><a name="v:mutateInd" class="def">mutateInd</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; <a href="GenProg.html#t:EvolParams">EvolParams</a> m e -&gt; <a href="GenProg.html#t:Ind">Ind</a> e -&gt; m (<a href="GenProg.html#t:Ind">Ind</a> e)</p><div class="doc"><p>Mutates an individual by applying the mutation function <code>mutate</code>
+ to a randomly selected node. The probability that an internal
+ (functional) node is chosen for muration is set by the <code><a href="GenProg.html#v:miProb">miProb</a></code>
+ parameter in <code><a href="GenProg.html#t:EvolParams">EvolParams</a></code>, whereas the probability that an external
+ (terminal) node is chosen equals <code>1-miProb</code>. Among internal and
+ external nodes, nodes are chosen uniformly at random. If the depth
+ of the mutated expression exceeds the depth limit <code><a href="GenProg.html#v:cDepth">cDepth</a></code>
+ specified by evolution parameters <code><a href="GenProg.html#t:EvolParams">EvolParams</a></code>, the individual is
+ left unaltered.
+</p></div></div><div class="top"><p class="src"><a name="v:crossoverPop" class="def">crossoverPop</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; <a href="GenProg.html#t:EvolParams">EvolParams</a> m e -&gt; <a href="GenProg.html#t:Pop">Pop</a> e -&gt; m (<a href="GenProg.html#t:Ind">Ind</a> e, <a href="GenProg.html#t:Ind">Ind</a> e)</p><div class="doc"><p>Applies crossover to two randomly chosen individuals from a
+ population. The probability of an individual being chosen as parent
+ is fitness-proportionate (individuals with better fitness have
+ better chanches of being chosen for crossover).
+</p></div></div><div class="top"><p class="src"><a name="v:mutatePop" class="def">mutatePop</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; <a href="GenProg.html#t:EvolParams">EvolParams</a> m e -&gt; <a href="GenProg.html#t:Pop">Pop</a> e -&gt; m (<a href="GenProg.html#t:Pop">Pop</a> e)</p><div class="doc"><p>Applies mutation operation to individuals from a population. The
+ probability of mutating each individual is determined by <code><a href="GenProg.html#v:mProb">mProb</a></code> parameter
+ from <code>EvalParams</code>.
+</p></div></div><h1 id="g:6">Evolution state
+</h1><div class="top"><p class="src"><span class="keyword">data</span>  <a name="t:EvolState" class="def">EvolState</a> e </p><div class="doc"><p>The state of the evolution.
+</p></div><div class="subs constructors"><p class="caption">Constructors</p><table><tr><td class="src"><a name="v:EvolState" class="def">EvolState</a></td><td class="doc empty">&nbsp;</td></tr><tr><td colspan="2"><div class="subs fields"><p class="caption">Fields</p><dl><dt class="src"><a name="v:pop" class="def">pop</a> :: <a href="GenProg.html#t:Pop">Pop</a> e</dt><dd class="doc"><p>Current population.
+</p></dd><dt class="src"><a name="v:iter" class="def">iter</a> :: Int</dt><dd class="doc"><p>Iteration (current generation number).
+</p></dd><dt class="src"><a name="v:cachedBest" class="def">cachedBest</a> :: <a href="GenProg.html#t:Ind">Ind</a> e</dt><dd class="doc"><p>Best individual evolved so far.
+</p></dd></dl><div class="clear"></div></div></td></tr></table></div><div class="subs instances"><p id="control.i:EvolState" class="caption collapser" onclick="toggleSection('i:EvolState')">Instances</p><div id="section.i:EvolState" class="show"><table><tr><td class="src">Eq e =&gt; Eq (<a href="GenProg.html#t:EvolState">EvolState</a> e)</td><td class="doc empty">&nbsp;</td></tr><tr><td class="src">Show e =&gt; Show (<a href="GenProg.html#t:EvolState">EvolState</a> e)</td><td class="doc empty">&nbsp;</td></tr></table></div></div></div><h1 id="g:7">Control parameters
+</h1><div class="top"><p class="src"><span class="keyword">type</span> <a name="t:Fitness" class="def">Fitness</a> e = e -&gt; Double</p><div class="doc"><p>Standardized fitness. It takes on values from 0 (best fitness) to
+ +infinity (worst fitness).
+</p></div></div><div class="top"><p class="src"><span class="keyword">type</span> <a name="t:Mutate" class="def">Mutate</a> m e = e -&gt; m e</p><div class="doc"><p>A function to mutate a chosen expression node.
+</p></div></div><div class="top"><p class="src"><a name="v:defaultMutation" class="def">defaultMutation</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; <a href="GenProg.html#t:EvolParams">EvolParams</a> m e -&gt; <a href="GenProg.html#t:Mutate">Mutate</a> m e</p><div class="doc"><p>Default mutation. Replaces a node, irrespective of its value,
+ with a randomly generated subexpression whose depth is limited to
+ <code><a href="GenProg.html#v:iDepth">iDepth</a></code>.
+</p></div></div><div class="top"><p class="src"><span class="keyword">type</span> <a name="t:Terminate" class="def">Terminate</a> e = <a href="GenProg.html#t:EvolState">EvolState</a> e -&gt; Bool</p><div class="doc"><p>Termination predicate.
+</p></div></div><div class="top"><p class="src"><a name="v:tSuccess" class="def">tSuccess</a> ::  (e -&gt; Bool) -&gt; <a href="GenProg.html#t:Terminate">Terminate</a> e</p><div class="doc"><p>Termination predicate: terminate if any individual satisfies the
+ specified predicate.
+</p></div></div><div class="top"><p class="src"><a name="v:tFitness" class="def">tFitness</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; Double -&gt; <a href="GenProg.html#t:Terminate">Terminate</a> e</p><div class="doc"><p>Termination predicate: terminate if best individual's
+ standardized fitness is greater than or equal to the specified value.
+</p></div></div><div class="top"><p class="src"><a name="v:tGeneration" class="def">tGeneration</a> ::  Int -&gt; <a href="GenProg.html#t:Terminate">Terminate</a> e</p><div class="doc"><p>Termination predicate: terminate after running for the specified
+ number of iterations.
+</p></div></div><div class="top"><p class="src"><span class="keyword">data</span>  <a name="t:EvolParams" class="def">EvolParams</a> m e </p><div class="doc"><p>Parameters governing the evolution.
+</p><p>Default evolution parameters,
+ as used in (Koza, 1992), are defined by <code><a href="GenProg.html#v:defaultEvolParams">defaultEvolParams</a></code>
+ and indicated below. At least the fitness function <code><a href="GenProg.html#v:fitness">fitness</a></code> should
+ be overriden.
+</p></div><div class="subs constructors"><p class="caption">Constructors</p><table><tr><td class="src"><a name="v:EvolParams" class="def">EvolParams</a></td><td class="doc empty">&nbsp;</td></tr><tr><td colspan="2"><div class="subs fields"><p class="caption">Fields</p><dl><dt class="src"><a name="v:popSize" class="def">popSize</a> :: Int</dt><dd class="doc"><p>Population size (number of individuals). Default is <code>500</code>.
+</p></dd><dt class="src"><a name="v:iDepth" class="def">iDepth</a> :: Int</dt><dd class="doc"><p>Depth of expressions in initial population. Default is <code>6</code>.
+</p></dd><dt class="src"><a name="v:cDepth" class="def">cDepth</a> :: Int</dt><dd class="doc"><p>Maximum depth of expressions created during the evolution.
+ Default is <code>17</code>.
+</p></dd><dt class="src"><a name="v:cProb" class="def">cProb</a> :: Double</dt><dd class="doc"><p>Probability of crossover. Default is <code>0.9</code>. If crossover is not
+ chosen, an individual is simply reproduced (copied as-is) into
+ the next generation.
+</p></dd><dt class="src"><a name="v:ciProb" class="def">ciProb</a> :: Double</dt><dd class="doc"><p>Probability that an internal (functional) node is chosen as a
+ crossover point. Default is <code>0.9</code>. If an internal node is not
+ chosen, an external (terminal) node is
+ chosen.
+</p></dd><dt class="src"><a name="v:mProb" class="def">mProb</a> :: Double</dt><dd class="doc"><p>Probability that an individual gets mutated. Default is <code>0</code>
+ (no mutation).
+</p></dd><dt class="src"><a name="v:miProb" class="def">miProb</a> :: Double</dt><dd class="doc"><p>Probability that an internal (functional) node is chosen for
+ mutation. Default is <code>0.1</code>.
+</p></dd><dt class="src"><a name="v:fitness" class="def">fitness</a> :: <a href="GenProg.html#t:Fitness">Fitness</a> e</dt><dd class="doc"><p>Standardized fitness function. Default value is <code>undefined</code>
+ (must be overriden).
+</p></dd><dt class="src"><a name="v:mutate" class="def">mutate</a> :: <a href="GenProg.html#t:Mutate">Mutate</a> m e</dt><dd class="doc"><p>Mutation function. Defines how to change a randomly chosen
+ node. Default is <code>defaultMutation defaultEvolParams</code>
+ (replacement of a chosen node with a randomly generated subexpression).
+</p></dd><dt class="src"><a name="v:elitists" class="def">elitists</a> :: Int</dt><dd class="doc"><p>Elitist factor: number of best-fitted individuals that are preserved
+ from each generation (reproduced as-is into next evolution state).
+ Default is <code>0</code>.
+</p></dd><dt class="src"><a name="v:terminate" class="def">terminate</a> :: <a href="GenProg.html#t:Terminate">Terminate</a> e</dt><dd class="doc"><p>Termination predicate. Default is <code>50</code> (terminate after 50 generations).
+</p></dd></dl><div class="clear"></div></div></td></tr></table></div></div><div class="top"><p class="src"><a name="v:defaultEvolParams" class="def">defaultEvolParams</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; <a href="GenProg.html#t:EvolParams">EvolParams</a> m e</p></div><h1 id="g:8">Evolution
+</h1><div class="top"><p class="src"><a name="v:evolve" class="def">evolve</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; <a href="GenProg.html#t:EvolParams">EvolParams</a> m e -&gt; m (<a href="GenProg.html#t:EvolState">EvolState</a> e)</p><div class="doc"><p>Creates an initial population and evolves it until termination
+ predicate is satisfied, returning the last evolution state.
+</p></div></div><div class="top"><p class="src"><a name="v:evolveFrom" class="def">evolveFrom</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; <a href="GenProg.html#t:EvolParams">EvolParams</a> m e -&gt; <a href="GenProg.html#t:Pop">Pop</a> e -&gt; m (<a href="GenProg.html#t:EvolState">EvolState</a> e)</p><div class="doc"><p>Evolves a given initial population until termination
+ predicate is satisfied, returning the last evolution state.
+ If the size of the initial population is less than
+ <code><a href="GenProg.html#v:popSize">popSize</a></code>, the population will be replenished (see <code><a href="GenProg.html#v:replenishPop">replenishPop</a></code>).
+</p></div></div><div class="top"><p class="src"><a name="v:evolveTrace" class="def">evolveTrace</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; <a href="GenProg.html#t:EvolParams">EvolParams</a> m e -&gt; m [<a href="GenProg.html#t:EvolState">EvolState</a> e]</p><div class="doc"><p>Creates an initial population and runs evolution until
+ termination predicate is satisfied. Returns a list of successive
+ evolution states.
+</p></div></div><div class="top"><p class="src"><a name="v:evolveTraceFrom" class="def">evolveTraceFrom</a> :: <a href="GenProg.html#t:GenProg">GenProg</a> m e =&gt; <a href="GenProg.html#t:EvolParams">EvolParams</a> m e -&gt; <a href="GenProg.html#t:Pop">Pop</a> e -&gt; m [<a href="GenProg.html#t:EvolState">EvolState</a> e]</p><div class="doc"><p>Runs evolution on a given initial population until termination
+ predicate is satisfied and returns a list of successive evolution
+ states. If the size of the initial population is less than
+ <code><a href="GenProg.html#v:popSize">popSize</a></code>, the population will be replenished (see <code><a href="GenProg.html#v:replenishPop">replenishPop</a></code>).
+</p></div></div><h1 id="g:9">Example
+</h1><div class="doc"><p>This is a simple, worked through example of how to use the GenProg
+library. Given a target number <code>n</code>, out aim is to evolve an arithmetic
+expression that evaluates to <code>n</code>. For example, given <code>13</code> as the
+target number, one possible solution is <code>(3 * 5) - 2</code>. The constants
+allowed to appear in the expression are restricted to integers from 1
+to 9. The allowed operations are <code>+</code>, <code>-</code>, <code>*</code>, and integer division
+without remainder.
+</p><p>We begin by defining the datatype for the genetically programed
+expression:
+</p><pre>
+-- The following language extensions need to be enabled:
+-- DeriveDataTypeable, FlexibleInstances, MultiParamTypeClasses
+
+import GenProg
+import Data.Generics
+import Control.Monad
+import Control.Monad.Random
+
+data E = Plus E E
+       | Minus E E
+       | Times E E
+       | Div E E
+       | Const Int
+       deriving (Typeable,Data,Eq,Show)
+</pre><p>In order to evolve arithmetic expressions, we need to be able to
+compute their values. To this end we define
+</p><pre>
+eval :: E -&gt; Maybe Int
+eval (Const c)     = Just c
+eval (Plus e1 e2)  = liftM2 (+) (eval e1) (eval e2)
+eval (Minus e1 e2) = liftM2 (-) (eval e1) (eval e2)
+eval (Times e1 e2) = liftM2 (*) (eval e1) (eval e2)
+eval (Div e1 e2) | ok        = liftM2 div x1 x2
+                 | otherwise = Nothing
+  where (x1,x2) = (eval e1,eval e2)
+        ok = x2 /= Just 0 &amp;&amp; liftM2 mod x1 x2 == Just 0
+</pre><p>Dividing by zero and dividing with a remainder are not allowed and in
+such cases we return <code>Nothing</code>.
+</p><p>Because we have made <code>E</code> an instance of the <code>Data</code> typeclass, it can
+be readily used as a genetically programmable expression. Next step is
+to make <code>E</code> an instance of the <code><a href="GenProg.html#t:GenProg">GenProg</a></code> typeclass:
+</p><pre>
+instance GenProg (Rand StdGen) E where
+  terminal    = Const <code>liftM</code> getRandomR (1,9)
+  nonterminal = do
+    r &lt;- getRandomR (0,3)
+    [liftM2 Plus terminal terminal,
+     liftM2 Minus terminal terminal,
+     liftM2 Times terminal terminal,
+     liftM2 Div terminal terminal] !! r
+</pre><p>Thus, a random terminal node contains one of the constants from 1 to
+9. A nonterminal node can be one of the four arithmetic operations,
+each with terminal nodes as arguments.  Note that computations are run
+within the standard random generator monad (<code>Rand StdGen</code>).
+</p><p>The fitness function evaluates the accurateness of the arithmetic
+expression with respect to the target number. If the value of the
+expression is far off from the target number <code>n</code>, the standardized
+fitness should be high. Moreover, we would like to keep the expression
+as simple as possible. To this end, we include a <em>parsimony factor</em>
+that is proportional to the number of nodes an expression has. We
+define the overall standardized fitness as
+</p><pre>
+myFitness :: Int -&gt; E -&gt; Double
+myFitness n e = error + size
+  where error = realToFrac $ maybe maxBound (abs . (n-)) (eval e)
+        size  = (realToFrac $ nodes e) / 100
+</pre><p>The number of nodes is divided by a factor of 100 to make it less
+important than the numeric accuracy of the expression.
+</p><p>We now have everything in place to get the evolution going. We will use
+default evolution parameters and choose <code>12345</code> as the target number:
+</p><pre class="screen"><code class="prompt">&gt;&gt;&gt; </code><strong class="userinput"><code>let params = defaultEvolParams { fitness = myFitness 12345 }
+</code></strong></pre><p>Let us first create a random number generator: 
+</p><pre class="screen"><code class="prompt">&gt;&gt;&gt; </code><strong class="userinput"><code>let g = mkStdGen 0
+</code></strong></pre><p>We are doing this because we want our results to be reproducible, and
+because we want to be able to compare the results of different
+evolution runs. Normally, you would use <code>getStdGen</code> to get a random
+generator with random seed.
+</p><p>To run the evolution and get the best evolved individual, we type
+</p><pre class="screen"><code class="prompt">&gt;&gt;&gt; </code><strong class="userinput"><code>let i = cachedBest $ evalRand (evolve params) g
+</code></strong></pre><p>To check out its standardized fitness, we type
+</p><pre class="screen"><code class="prompt">&gt;&gt;&gt; </code><strong class="userinput"><code>sFitness i
+</code></strong>39.61
+</pre><p>Let us see how the actual expression looks like:
+</p><pre class="screen"><code class="prompt">&gt;&gt;&gt; </code><strong class="userinput"><code>unInd i
+</code></strong>Times (Minus (Minus (Minus (Plus (Const 4) (Const 4)) (Plus (Const 6) 
+(Const 7))) (Minus (Minus (Const 5) (Const 9)) (Plus (Minus (Const 5) 
+(Const 9)) (Minus (Const 4) (Const 4))))) (Plus (Times (Plus (Const 5) 
+(Const 1)) (Const 6)) (Times (Plus (Const 9) (Const 3)) (Minus (Const 1) 
+(Const 8))))) (Div (Times (Plus (Plus (Const 3) (Const 5)) (Times (Const 4) 
+(Const 7))) (Plus (Const 4) (Const 4))) (Minus (Minus (Plus (Const 2) 
+(Const 8)) (Plus (Const 6) (Const 7))) (Plus (Minus (Const 5) (Const 9)) 
+(Minus (Const 4) (Const 4)))))
+</pre><p>The number of nodes is
+</p><pre class="screen"><code class="prompt">&gt;&gt;&gt; </code><strong class="userinput"><code>nodes $ unInd i
+</code></strong>61
+</pre><p>Let us see to what number the expression evaluates:
+</p><pre class="screen"><code class="prompt">&gt;&gt;&gt; </code><strong class="userinput"><code>eval $ unInd i
+</code></strong>Just 12384
+</pre><p>So in this run we didn't get a perfect match, but we were close. Let
+us see if we can do better.
+</p><p>When doing genetic programming, it is always a good idea to experiment
+a bit with the parameters. There are no parameters that work best for
+any given problem. You can learn a lot about how parameters influence
+the evolution by analysing how the evolution progresses in time. This
+can be accomplised by evolving an evolution trace:
+</p><pre class="screen"><code class="prompt">&gt;&gt;&gt; </code><strong class="userinput"><code>let trace = evalRand (evolveTrace params) g
+</code></strong></pre><p>We can now analyse how the standardized fitness of the
+best individual improves during the evolution:
+</p><pre class="screen"><code class="prompt">&gt;&gt;&gt; </code><strong class="userinput"><code>map (sFitness . best . pop) trace
+</code></strong>[9591.35,2343.59,1935.59,2343.59,903.51,903.45,585.59,585.59,327.45,225.41,
+225.41,135.43,57.49,39.61,39.61,39.61,39.61,39.61,57.43,57.47,57.43,57.45,
+57.33,57.43,57.43,57.45,57.43,57.43,57.35,57.35,57.43,57.27,57.33,57.33,57.43,
+57.29,57.33,57.41,57.29,57.43,57.33,57.35,57.35,57.33,57.39,57.39,57.39,57.33,
+57.37,57.37]
+</pre><p>We see that at some point the fitness decreases and then increases
+again. This indicates that the best fitted individual was lost by
+evolving from one generation to the other. We can prevent this by
+employing the <em>elitist strategy</em>. Let us see what happens if we
+preserve a best fitted individual in each generation:
+</p><pre class="screen"><code class="prompt">&gt;&gt;&gt; </code><strong class="userinput"><code>let trace = evalRand (evolveTrace params {elitists = 1}) g
+</code></strong><code class="prompt">&gt;&gt;&gt; </code><strong class="userinput"><code>map (sFitness . best . pop) trace
+</code></strong>[9591.35,2343.59,711.61,711.61,711.61,711.61,57.55,57.53,57.39,57.39,57.39,
+57.39,57.37,57.37,57.37,57.37,57.37,57.37,57.37,57.37,57.35,57.35,57.35,
+57.35,57.35,57.35,57.35,57.35,57.35,57.35,57.33,57.33,57.33,57.33,57.33,
+57.33,57.33,57.33,57.33,25.31,25.31,25.31,25.31,25.31,25.31,25.296,25.296,
+25.296,25.296,25.296]
+</pre><p>This gives us better fitness, but still not an exact match:
+</p><pre class="screen"><code class="prompt">&gt;&gt;&gt; </code><strong class="userinput"><code>let i = cachedBest $ last trace
+</code></strong><code class="prompt">&gt;&gt;&gt; </code><strong class="userinput"><code>eval $ unInd i
+</code></strong>Just 12320
+</pre><p>In the previous evolution run fitness converged relatively fast, but then
+remained stuck. To stir up things a little, let us allow for some
+mutation. Setting mutation probability to 5%, while retaining the
+elitist strategy, we get
+</p><pre class="screen"><code class="prompt">&gt;&gt;&gt; </code><strong class="userinput"><code>let trace = evalRand (evolveTrace params {elitists = 1, mProb = 0.05}) g
+</code></strong><code class="prompt">&gt;&gt;&gt; </code><strong class="userinput"><code>map (sFitness . best . pop) trace
+</code></strong>[9591.35,9591.35,9591.35,9591.35,9591.35,9591.35,9159.35,8403.23,7239.11,
+6087.15,6087.15,1479.13,819.21,60.13,51.19,5.19,5.19,5.19,5.19,5.19,1.23,
+1.23,1.23,1.23,1.23,1.23,1.21,1.21,1.21,1.21,0.23998,0.23998,0.23998,0.23998,
+0.23998,0.23998,0.23998,0.23998,0.23998,0.23998,0.23998,0.23998,0.23998,
+0.23998,0.23998,0.23998,0.23998,0.23998,0.23998,0.23998]
+</pre><p>This time we've got a perfect match:
+</p><pre class="screen"><code class="prompt">&gt;&gt;&gt; </code><strong class="userinput"><code>let i = cachedBest $ last trace
+</code></strong><code class="prompt">&gt;&gt;&gt; </code><strong class="userinput"><code>eval $ unInd i
+</code></strong>Just 12345
+</pre><p>while at the same time the expression is rather compact:
+</p><pre class="screen"><code class="prompt">&gt;&gt;&gt; </code><strong class="userinput"><code>unInd i
+</code></strong>Plus (Times (Const 4) (Plus (Const 9) (Const 4))) (Plus (Plus (Times 
+(Plus (Const 4) (Const 3)) (Times (Times (Const 3) (Const 9)) (Times 
+(Const 5) (Plus (Const 9) (Const 4))))) (Const 3)) (Const 5))
+<code class="prompt">&gt;&gt;&gt; </code><strong class="userinput"><code>nodes $ unInd i
+</code></strong>23
+</pre></div></div></div><div id="footer"><p>Produced by <a href="http://www.haskell.org/haddock/">Haddock</a> version 2.10.0</p></div></body></html>

@@ -1,0 +1,33 @@
+name:                genprog
+version:             0.1.0.1
+synopsis:            Genetic programming library
+homepage:            http://github.com/jsnajder/genprog
+license:             BSD3
+license-file:        LICENSE
+author:              Jan Snajder
+maintainer:          jan.snajder@fer.hr
+copyright:           (c) 2010 Jan Snajder
+category:            AI, Algorithms, Optimisation
+stability:           Experimental
+build-type:          Simple
+cabal-version:       >= 1.8
+description:
+  This package provides a /genetic programming/ framework. Genetic
+  programming is an evolutionary technique, inspired by biological
+  evolution, to evolve programs for solving specific problems. A genetic
+  program is represented by a value of an algebraic datatype and
+  associated with a custom-defined /fitness/ value indicating the quality
+  of the solution. Starting from a randomly generated initial population
+  of genetic programs, the genetic operators of /selection/, /crossover/,
+  and /mutation/ are used to evolve programs of increasingly better
+  quality.
+
+library
+  exposed-modules: 
+    GenProg, GenProg.GenExpr, GenProg.GenExpr.Data
+  build-depends: 
+    base == 4.5.*, syb == 0.4.*, syz == 0.2.*, MonadRandom == 0.1.*
+  extensions:
+    MultiParamTypeClasses, FunctionalDependencies, 
+    NoMonomorphismRestriction, ScopedTypeVariables, FlexibleInstances, 
+    Rank2Types, UndecidableInstances, DeriveDataTypeable
