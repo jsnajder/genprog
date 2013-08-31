@@ -96,9 +96,9 @@ import Data.Ord
 import Data.Maybe
 import Control.Monad
 import Control.Monad.Random
-import GenProg.GenExpr.Data
+import GenProg.GenExpr
 
--- | A typeclass defining a genetic program interface.  Datatypes @e@
+-- | A typeclass defining a genetic program interface. Datatypes @e@
 -- that are to be used as genetic programs must be instances of the
 -- 'GenExpr' typeclass and must implement this interface. 
 class (Eq e, GenExpr e, MonadRandom m) => GenProg m e | e -> m where
