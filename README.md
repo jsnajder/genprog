@@ -1,4 +1,4 @@
-genprog: Genetic programming library
+genprog: Genetic Programming Library
 ====================================
 
 This package provides a *genetic programming* framework. Genetic programming is
@@ -10,4 +10,5 @@ initial population of genetic programs, the genetic operators of *selection*,
 *crossover*, and *mutation* are used to evolve programs of increasingly better
 quality.
 
-Check out the documentation and examples on [Hackage](http://hackage.haskell.org/packages/archive/genprog/0.1/doc/html/GenProg.html).
+Check out the documentation and examples on
+[Hackage](http://hackage.haskell.org/package/genprog).
